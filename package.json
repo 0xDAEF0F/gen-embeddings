@@ -1,0 +1,27 @@
+{
+  "name": "llm-typescript-codebase-embeddings",
+  "version": "1.0.0",
+  "description": "",
+  "main": "search.js",
+  "scripts": {
+    "ai-search": "ts-node aiChat.ts",
+    "start": "ts-node search.ts",
+    "insert": "ts-node insertChunks.ts",
+    "search": "ts-node search.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ollama": "0.5.11",
+    "pg": "8.13.1",
+    "ts-morph": "24.0.0",
+    "typescript": "5.7.2"
+  },
+  "devDependencies": {
+    "@types/pg": "8.11.10",
+    "@types/uuid": "10.0.0",
+    "ts-node": "10.9.2"
+  }
+}
