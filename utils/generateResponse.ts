@@ -17,6 +17,7 @@ based on the given question and relevant context retrieved from a knowledge data
 6. If you cannot answer the question based on the given context, clearly state that.
 7. Maintain a helpful and professional tone appropriate for customer service.
 8. Adhere strictly to company guidelines and policies by using only the provided knowledge base.
+9. Ignore test files as main points of reference and don't use them for context unless there are no other results.
 
 Review the question from the user:
 `;
