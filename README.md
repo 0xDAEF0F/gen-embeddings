@@ -91,7 +91,7 @@ npm ci
 npm run insert /path-to-codebase
 ```
 
-### Search Indexed Codebase
+### Search Indexed Codebase from Database for Relevent Documents
 
 ```bash
 npm run search "complicated function"
@@ -100,5 +100,19 @@ npm run search "complicated function"
 ### Use AI to Generate Response from Search Results
 
 ```bash
-npm run ai-search "complicated function"
+npm run ai-search "What's an LLM"
 ```
+
+### Start Web Server
+
+```bash
+npm start
+```
+
+Then load a search using: http://localhost:3000/ai-search?searchText=what%20is%20an%20llm&dbResultLimit=5.
+
+#### View Swagger Docs
+
+[![Swagger Docs](swagger.png)](http://localhost:3000/docs)
+
+Swagger docs are available here: **http://localhost:3000/docs**.
