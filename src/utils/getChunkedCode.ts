@@ -1,5 +1,6 @@
-import { Project, SourceFile, ts } from "ts-morph";
+import { SourceFile, ts } from "ts-morph";
 import { v4 as uuidv4 } from "uuid";
+import { getCodeFiles } from "./getCodeFiles";
 
 interface CodeChunk {
   id: string;
@@ -25,20 +26,10 @@ interface CodeChunk {
 }
 
 const chunkCode =(codebasePath: string): CodeChunk[] => {
-  console.log(`Codebase path: ${codebasePath}`);
-
-  const project = new Project({
-    tsConfigFilePath: `${codebasePath}/tsconfig.json`,
-  });
-
-  console.log(`Source files found:`);
-  project.getSourceFiles().forEach((file) => {
-    console.log(`  - ${file.getFilePath()}`);
-  });
-
+  const files = getCodeFiles(codebasePath);
   const chunks: CodeChunk[] = [];
 
-  project.getSourceFiles().forEach((sourceFile) => {
+  files.forEach((sourceFile) => {
     chunks.push(...processSourceFile(sourceFile));
   });
 

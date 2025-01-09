@@ -4,15 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "ai-search": "ts-node aiChat.ts",
-    "start": "ts-node index.ts",
-    "insert": "ts-node insertChunks.ts",
-    "search": "ts-node search.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-swagger": "ts-node src/generateSwaggerFile.ts",
+    "start": "node dist/index.js",
+    "ai-search": "ts-node src/aiChat.ts",
+    "insert-codebase": "ts-node src/insertChunks.ts",
+    "search": "ts-node src/search.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cors": "^10.0.2",
+    "@fastify/multipart": "^9.0.1",
     "@fastify/swagger": "9.4.0",
     "@fastify/swagger-ui": "5.2.0",
     "dotenv": "16.4.7",

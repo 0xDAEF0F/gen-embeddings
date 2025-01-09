@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import { MetadataFilter } from './utils/vectorstore';
 import { generateResponse } from './utils/generateResponse';
 import { getVectorStore } from './utils/getVectorStore';
 

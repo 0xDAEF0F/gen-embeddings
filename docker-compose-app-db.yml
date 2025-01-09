@@ -1,0 +1,31 @@
+services:
+  timescaledb:
+    image: timescale/timescaledb-ha:pg16
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - TIMESCALE_SERVICE_URL=postgres://postgres:password@timescaledb:5432/postgres
+      # Use the following if ollama is already running on the host machine
+      # This works on OSX and possibly Windows
+      # - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://172.17.0.1:11434
+    depends_on:
+      - timescaledb
+    volumes:
+      - /app/node_modules
+
+volumes:
+  timescaledb_data:

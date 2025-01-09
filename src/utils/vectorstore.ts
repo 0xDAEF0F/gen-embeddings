@@ -252,6 +252,18 @@ class VectorStore {
     }
   }
 
+  async deleteFile(filePath: string): Promise<void> {
+    try {
+      const deleteQuery = `DELETE FROM ${this.settings.vectorStore.tableName} WHERE path = $1`;
+      await this.client.query(deleteQuery, [filePath]);
+      console.log(
+        `Deleted records with path '${filePath}' from ${this.settings.vectorStore.tableName}`,
+      );
+    } catch (error) {
+      console.error("Error deleting file records:", error);
+    }
+  }
+
   async disconnect(): Promise<void> {
     await this.client.end();
     console.log("Disconnected from database");
