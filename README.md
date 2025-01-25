@@ -13,8 +13,7 @@ Parse and Load Typescript Codebase into Postges Vector DB which can be used as p
     - [3. Set up Ollama and Configure Env Vars](#3-set-up-ollama-and-configure-env-vars)
     - [4. Install Node Depdencies](#4-install-node-depdencies)
   - [Usage](#usage)
-    - [Index Document](#index-document)
-    - [Index Directory of Documents](#index-directory-of-documents)
+    - [Index Typescript Codebase](#index-typescript-codebase)
     - [Search Indexed Database for Relevent Documents](#search-indexed-database-for-relevent-documents)
     - [Use AI to Generate Response from Search Results](#use-ai-to-generate-response-from-search-results)
     - [Run Web Server in Dev Mode](#run-web-server-in-dev-mode)
@@ -135,16 +134,10 @@ npm ci
 
 ## Usage
 
-### Index Document
+### Index Typescript Codebase
 
 ```bash
-npm run insert-file /path-to-text-document
-```
-
-### Index Directory of Documents
-
-```bash
-npm run insert-dir /path-to-directory
+npm run insert-codebase /path-to-codebase
 ```
 
 ### Search Indexed Database for Relevent Documents
