@@ -12,7 +12,7 @@ const main = async () => {
 	const vectorStore = getVectorStore();
 	await vectorStore.connect();
 
-	const searchResults = await vectorStore.search(searchText, 100);
+	const searchResults = await vectorStore.search(searchText, 50);
 	const results_ = searchResults.map((res) => {
 		return {
 			metadata: res.metadata,

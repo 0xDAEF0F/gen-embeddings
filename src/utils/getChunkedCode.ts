@@ -14,8 +14,8 @@ const chunkCode = (codebasePath: string): CodeChunk[] => {
 	return chunks;
 };
 
-const processSourceFile = (sourceFile: SourceFile): CodeChunk[] => {
-	const chunks: CodeChunk[] = [];
+export const processSourceFile = (sourceFile: SourceFile): CodeChunk[] => {
+	const chunks: (CodeChunk | undefined)[] = [];
 	const filePath = sourceFile.getFilePath();
 
 	console.log(`\nProcessing source file: ${sourceFile.getBaseName()}`);
@@ -66,7 +66,7 @@ const processSourceFile = (sourceFile: SourceFile): CodeChunk[] => {
 		chunks.push(...processRemainingCode(sourceFile, remainingCode, filePath));
 	}
 
-	return chunks;
+	return chunks.filter(Boolean) as CodeChunk[];
 };
 
 const getRemainingCode = (sourceFile: SourceFile): string => {
@@ -106,15 +106,28 @@ const processRemainingCode = (
 
 	console.log(`\nProcessing remaining code in: ${sourceFile.getBaseName()}`);
 
+	// pushes a chunk to the array
 	const createChunk = (node: ts.Node, type: CodeChunk["metadata"]["type"]) => {
 		const start = node.getStart(ast);
 		const end = node.getEnd();
 		const content = node.getText(ast);
 
+		const jsDocRelatedToNode = ts.getJSDocCommentsAndTags(node);
+		const jsDocComment =
+			jsDocRelatedToNode.length > 0
+				? jsDocRelatedToNode[0].getText()
+				: undefined;
+
+		if (jsDocComment?.includes("@internal")) {
+			return;
+		}
+
 		chunks.push({
 			id: uuidv4(),
-			content,
-			metadata: { type },
+			content: jsDocComment ? `${jsDocComment}\n${content}` : content,
+			metadata: {
+				type,
+			},
 			path: filePath,
 			startLine: ast.getLineAndCharacterOfPosition(start).line + 1,
 			endLine: ast.getLineAndCharacterOfPosition(end).line + 1,
@@ -123,8 +136,6 @@ const processRemainingCode = (
 
 	const traverse = (node: ts.Node) => {
 		if (
-			ts.isImportDeclaration(node) ||
-			ts.isExportDeclaration(node) ||
 			ts.isVariableStatement(node) ||
 			ts.isExpressionStatement(node) ||
 			ts.isTypeAliasDeclaration(node) ||
@@ -147,7 +158,7 @@ const createChunkFromNode = (
 	nodeType: "function" | "class" | "interface" | "type" | "enum" | "other",
 	filePath: string,
 	ast?: ts.SourceFile,
-): CodeChunk => {
+): CodeChunk | undefined => {
 	const nodeSourceFile = ast ?? node.getSourceFile();
 
 	const start = node.getStart(nodeSourceFile);
@@ -157,9 +168,26 @@ const createChunkFromNode = (
 
 	const content = node.getText(nodeSourceFile);
 
+	// Get JSDoc if available
+	let jsDocComment: string | undefined;
+	if (
+		ts.isFunctionDeclaration(node) ||
+		ts.isClassDeclaration(node) ||
+		ts.isInterfaceDeclaration(node) ||
+		ts.isEnumDeclaration(node) ||
+		ts.isTypeAliasDeclaration(node)
+	) {
+		const jsDocNodes = ts.getJSDocCommentsAndTags(node);
+		jsDocComment = jsDocNodes.length > 0 ? jsDocNodes[0].getText() : undefined;
+	}
+
+	if (jsDocComment?.includes("@internal")) {
+		return;
+	}
+
 	const chunk: CodeChunk = {
 		id: uuidv4(),
-		content,
+		content: jsDocComment ? `${jsDocComment}\n${content}` : content,
 		metadata: {
 			type: nodeType,
 		},

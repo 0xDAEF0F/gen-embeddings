@@ -1,7 +1,5 @@
 # LLM Typescript Codebase Embeddings
 
-![Code Search](code-search.jpeg)
-
 Parse and Load Typescript Codebase into Postges Vector DB which can be used as part of a RAG setup.
 
 
@@ -41,12 +39,12 @@ docker compose -f docker-compose.yml up
 
 Choose on of the following docker compose files based on your preferences:
 
-| File                      | Description |
-|---------------------------|-------------------------------------------------|
+| File                      | Description                                     |
+| ------------------------- | ----------------------------------------------- |
 | docker-compose.yml        | Runs the postgres db, ollama and the nodejs app |
-| docker-compose-app-db.yml | Runs the postgres db and the nodejs app |
-| docker-compose-db.yml     | Runs the postgres db |
-| docker-compose-app.yml    | Runs the nodejs app  |
+| docker-compose-app-db.yml | Runs the postgres db and the nodejs app         |
+| docker-compose-db.yml     | Runs the postgres db                            |
+| docker-compose-app.yml    | Runs the nodejs app                             |
 
 
 Run the Docker container(s):

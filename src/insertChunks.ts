@@ -1,11 +1,7 @@
 import "dotenv/config";
-import { createCodeFilesTable } from "./utils/createCodeFilesTable";
 import { createEmbedding } from "./utils/createEmbedding";
 import { getChunkedCode } from "./utils/getChunkedCode";
-import { getCodeFiles } from "./utils/getCodeFiles";
-import { getDocumentStore } from "./utils/getDocumentStore";
 import { getVectorStore } from "./utils/getVectorStore";
-import { saveFileToDatabase } from "./utils/saveFileToDatabase";
 
 const main = async () => {
 	const codebasePath = process.argv[2];
@@ -15,27 +11,11 @@ const main = async () => {
 		process.exit(1);
 	}
 
-	const pgClient = getDocumentStore();
-	await pgClient.connect();
-
-	await createCodeFilesTable(pgClient);
-
 	const vectorStore = getVectorStore();
 	await vectorStore.connect();
-	await vectorStore.createTables();
-	await vectorStore.createIndex();
 
-	const codeFiles = getCodeFiles(codebasePath);
-	await Promise.all(
-		codeFiles.map(async (sourceFile) => {
-			const fileContent = sourceFile.getFullText();
-
-			const fileBuffer = Buffer.from(fileContent, "utf-8");
-			await saveFileToDatabase(pgClient, sourceFile.getFilePath(), fileBuffer);
-		}),
-	);
-
-	await pgClient.end();
+	// clears up all of the data from the embeddings
+	await vectorStore.delete(undefined, undefined, true);
 
 	const codeChunks = getChunkedCode(codebasePath);
 	for (const chunk of codeChunks) {
