@@ -1,5 +1,5 @@
-import * as fs from "fs/promises";
-import * as path from "path";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
 export const getAllFiles = async (dirPath: string): Promise<string[]> => {
 	const entries = await fs.readdir(dirPath, { withFileTypes: true });

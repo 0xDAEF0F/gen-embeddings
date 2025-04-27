@@ -1,5 +1,7 @@
+import type { Client } from "pg";
+
 export const saveFileToDatabase = async (
-	pgClient: any,
+	pgClient: Client,
 	fileName: string,
 	fileBuffer: Buffer,
 ) => {

@@ -1,5 +1,5 @@
-import { createEmbedding } from "./createEmbedding";
 import { Client } from "pg";
+import { createEmbedding } from "./createEmbedding";
 
 interface CodeChunk {
 	id: string;
@@ -152,7 +152,7 @@ class VectorStore {
 
 	async search(
 		queryText: string,
-		limit: number = 5,
+		limit = 5,
 		metadataFilter: MetadataFilter | MetadataFilter[] | null = null,
 	): Promise<CodeChunk[]> {
 		const queryEmbedding = await createEmbedding(queryText);
@@ -164,6 +164,7 @@ class VectorStore {
 		if (metadataFilter) {
 			const conditions: string[] = [];
 			if (!Array.isArray(metadataFilter)) {
+				// biome-ignore lint:
 				metadataFilter = [metadataFilter];
 			}
 
@@ -172,14 +173,13 @@ class VectorStore {
 					.map(([key, value]) => {
 						if (typeof value === "string") {
 							return `metadata->>'${key}' = '${value}'`;
-						} else {
-							return `metadata->>'${key}' = ${value}`;
 						}
+						return `metadata->>'${key}' = ${value}`;
 					})
 					.join(" AND ");
 				conditions.push(`(${condition})`);
 			}
-			whereClause = "WHERE " + conditions.join(" OR ");
+			whereClause = `WHERE ${conditions.join(" OR ")}`;
 		}
 
 		const query = `
@@ -270,8 +270,8 @@ class VectorStore {
 
 export {
 	VectorStore,
-	CodeChunk,
-	DatabaseSettings,
-	VectorStoreSettings,
-	MetadataFilter,
+	type CodeChunk,
+	type DatabaseSettings,
+	type VectorStoreSettings,
+	type MetadataFilter,
 };

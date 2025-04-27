@@ -1,4 +1,6 @@
-export const createCodeFilesTable = async (pgClient: any) => {
+import type { Client } from "pg";
+
+export const createCodeFilesTable = async (pgClient: Client) => {
 	const tableExistsQuery = `
     SELECT EXISTS (
       SELECT 1 

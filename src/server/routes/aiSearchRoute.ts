@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import { getInitializedVectorStore } from "../../utils/getInitializedVectorStore";
 import { generateResponse } from "../../utils/generateResponse";
 

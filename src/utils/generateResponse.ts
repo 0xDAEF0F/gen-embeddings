@@ -24,6 +24,7 @@ Review the question from the user:
 
 export const generateResponse = async (
 	question: string,
+	// biome-ignore lint:
 	context: any[],
 ): Promise<string> => {
 	const contextStr = JSON.stringify(context, null, 2);
