@@ -1,7 +1,7 @@
-import { Ollama } from 'ollama';
+import { Ollama } from "ollama";
 
-const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
-const OLLAMA_CHAT_MODEL = process.env.OLLAMA_CHAT_MODEL || 'llama3.2';
+const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
+const OLLAMA_CHAT_MODEL = process.env.OLLAMA_CHAT_MODEL || "llama3.2";
 
 const SYSTEM_PROMPT = `
 # Role and Purpose
@@ -23,29 +23,29 @@ Review the question from the user:
 `;
 
 export const generateResponse = async (
-  question: string,
-  context: any[],
+	question: string,
+	context: any[],
 ): Promise<string> => {
-  const contextStr = JSON.stringify(context, null, 2);
+	const contextStr = JSON.stringify(context, null, 2);
 
-  const messages = [
-    { role: 'system', content: SYSTEM_PROMPT },
-    { role: 'user', content: `# User question:\n${question}` },
-    { role: 'assistant', content: `# Retrieved information:\n${contextStr}` },
-    { role: 'assistant', content: '' },
-  ];
+	const messages = [
+		{ role: "system", content: SYSTEM_PROMPT },
+		{ role: "user", content: `# User question:\n${question}` },
+		{ role: "assistant", content: `# Retrieved information:\n${contextStr}` },
+		{ role: "assistant", content: "" },
+	];
 
-  const ollama = new Ollama({ host: OLLAMA_BASE_URL });
-  try {
-    const response = await ollama.chat({
-      model: OLLAMA_CHAT_MODEL,
-      messages: messages,
-      stream: false
-    });
+	const ollama = new Ollama({ host: OLLAMA_BASE_URL });
+	try {
+		const response = await ollama.chat({
+			model: OLLAMA_CHAT_MODEL,
+			messages: messages,
+			stream: false,
+		});
 
-    return response.message.content;
-  } catch (error) {
-    console.error('Error in generateResponse:', error);
-    throw error; // Re-throw the error to be handled by the caller
-  }
-}
+		return response.message.content;
+	} catch (error) {
+		console.error("Error in generateResponse:", error);
+		throw error; // Re-throw the error to be handled by the caller
+	}
+};

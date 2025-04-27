@@ -1,21 +1,27 @@
-import 'dotenv/config'
+import "dotenv/config";
 import { getVectorStore } from "./utils/getVectorStore";
 
 const main = async () => {
-  const searchText = process.argv[2];
+	const searchText = process.argv[2];
 
-  if (!searchText) {
-    console.error("Please provide the searchText as an argument.");
-    process.exit(1);
-  }
+	if (!searchText) {
+		console.error("Please provide the searchText as an argument.");
+		process.exit(1);
+	}
 
-  const vectorStore = getVectorStore();
-  await vectorStore.connect();
+	const vectorStore = getVectorStore();
+	await vectorStore.connect();
 
-  const searchResults = await vectorStore.search(searchText, 3);
-  console.log("Search Results:", searchResults);
+	const searchResults = await vectorStore.search(searchText, 100);
+	const results_ = searchResults.map((res) => {
+		return {
+			metadata: res.metadata,
+			content: res.content,
+		};
+	});
+	console.log(JSON.stringify(results_, null, 2));
 
-  await vectorStore.disconnect();
+	await vectorStore.disconnect();
 };
 
 main().catch(console.error);

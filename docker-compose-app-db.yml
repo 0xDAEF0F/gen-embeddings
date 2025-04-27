@@ -21,7 +21,7 @@ services:
       # Use the following if ollama is already running on the host machine
       # This works on OSX and possibly Windows
       # - OLLAMA_BASE_URL=http://host.docker.internal:11434
-      - OLLAMA_BASE_URL=http://172.17.0.1:11434
+      - OLLAMA_BASE_URL=http://192.168.1.187:11434
     depends_on:
       - timescaledb
     volumes:
