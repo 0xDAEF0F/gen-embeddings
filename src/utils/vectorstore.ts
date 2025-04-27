@@ -60,7 +60,7 @@ class VectorStore {
 
 	async connect(): Promise<void> {
 		await this.client.connect();
-		// console.log("Connected to database");
+		console.log("Connected to database");
 	}
 
 	async createTables(): Promise<void> {
@@ -264,7 +264,7 @@ class VectorStore {
 
 	async disconnect(): Promise<void> {
 		await this.client.end();
-		// console.log("Disconnected from database");
+		console.log("Disconnected from database");
 	}
 }
 

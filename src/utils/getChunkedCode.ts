@@ -1,29 +1,7 @@
 import { type SourceFile, ts } from "ts-morph";
 import { v4 as uuidv4 } from "uuid";
 import { getCodeFiles } from "./getCodeFiles";
-
-interface CodeChunk {
-	id: string;
-	content: string;
-	metadata: {
-		type:
-			| "function"
-			| "class"
-			| "interface"
-			| "other"
-			| "variable"
-			| "expression"
-			| "import"
-			| "export"
-			| "type"
-			| "enum";
-		functionOrClassName?: string;
-	};
-	path: string;
-	startLine: number;
-	endLine: number;
-	embedding?: number[];
-}
+import type { CodeChunk } from "./vectorstore";
 
 const chunkCode = (codebasePath: string): CodeChunk[] => {
 	const files = getCodeFiles(codebasePath);
