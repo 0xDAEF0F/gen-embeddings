@@ -2,35 +2,14 @@
 
 Parse and Load Typescript Codebase into Postges Vector DB which can be used as part of a RAG setup.
 
-
-- [LLM Typescript Codebase Embeddings](#llm-typescript-codebase-embeddings)
-  - [Quick Start](#quick-start)
-  - [Manual Set up Instructions](#manual-set-up-instructions)
-    - [1. Set up Docker environment](#1-set-up-docker-environment)
-    - [2. Connect to the database using a PostgreSQL GUI client](#2-connect-to-the-database-using-a-postgresql-gui-client)
-    - [3. Set up Ollama and Configure Env Vars](#3-set-up-ollama-and-configure-env-vars)
-    - [4. Install Node Depdencies](#4-install-node-depdencies)
-  - [Usage](#usage)
-    - [Index Typescript Codebase](#index-typescript-codebase)
-    - [Search Indexed Database for Relevent Documents](#search-indexed-database-for-relevent-documents)
-    - [Use AI to Generate Response from Search Results](#use-ai-to-generate-response-from-search-results)
-    - [Run Web Server in Dev Mode](#run-web-server-in-dev-mode)
-    - [Build Web Server](#build-web-server)
-    - [Start Web Server](#start-web-server)
-      - [Upload a text file](#upload-a-text-file)
-      - [View Swagger Docs](#view-swagger-docs)
-  - [Example Applications](#example-applications)
-    - [Simple App](#simple-app)
-  - [System Overview](#system-overview)
-
 ## Quick Start
 
 Add your custom text documents to the [code](code) directory.
 This will run everything if you want to avoid having to install node/postgres/ollama.
 
 ```bash
-# Run everything
-docker compose -f docker-compose.yml up
+# Run database
+docker compose up
 ```
 
 ## Manual Set up Instructions
@@ -41,10 +20,7 @@ Choose on of the following docker compose files based on your preferences:
 
 | File                      | Description                                     |
 | ------------------------- | ----------------------------------------------- |
-| docker-compose.yml        | Runs the postgres db, ollama and the nodejs app |
-| docker-compose-app-db.yml | Runs the postgres db and the nodejs app         |
-| docker-compose-db.yml     | Runs the postgres db                            |
-| docker-compose-app.yml    | Runs the nodejs app                             |
+| docker-compose.yml        | Runs the postgres db                            |
 
 
 Run the Docker container(s):
@@ -127,7 +103,7 @@ ollama pull mxbai-embed-large
 ### 4. Install Node Depdencies
 
 ```bash
-npm ci
+bun ci
 ```
 
 ## Usage
@@ -135,65 +111,32 @@ npm ci
 ### Index Typescript Codebase
 
 ```bash
-npm run insert-codebase /path-to-codebase
+bun run insert-codebase /path-to-codebase
 ```
 
 ### Search Indexed Database for Relevent Documents
 
 ```bash
-npm run search "What's an LLM"
-```
-
-### Use AI to Generate Response from Search Results
-
-```bash
-npm run ai-search "What's an LLM"
+bun run search "how to instantiate a thirdweb wallet"
 ```
 
 ### Run Web Server in Dev Mode
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 ### Build Web Server
 
 ```bash
-npm run build
+bun run build
 ```
 
 ### Start Web Server
 
 ```bash
-npm start
+bun run start
 ```
-
-#### Upload a text file
-
-```bash
-curl -X POST \
-  http://localhost:3000/upload \
-  -H 'Content-Type: multipart/form-data' \
-  -F 'file=@docs/llama.txt' \
-  -F 'description=About Llama' \
-  -F 'category=Documents'
-```
-
-Then load a search using: http://localhost:3000/ai-search?searchText=what%20is%20an%20llm&dbResultLimit=5.
-
-#### View Swagger Docs
-
-[![Swagger Docs](swagger.png)](https://paulb896.github.io/llm-typescript-codebase-embeddings/)
-
-Local Swagger docs will be available here: **http://localhost:3000/docs**, and an example can be seen here: https://paulb896.github.io/llm-typescript-codebase-embeddings/.
-
-## Example Applications
-
-### Simple App
-
-See the [simple react app](./examples/simple-app/README.md) for more details.
-
-![Example App](./examples/simple-app/example-simple-app.png)
 
 ## System Overview
 
