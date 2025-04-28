@@ -154,6 +154,7 @@ class VectorStore {
 		queryText: string,
 		limit = 5,
 		metadataFilter: MetadataFilter | MetadataFilter[] | null = null,
+		maxTokens = 5000,
 	): Promise<CodeChunk[]> {
 		const queryEmbedding = await createOpenAiEmbedding(
 			queryText,
@@ -193,10 +194,10 @@ class VectorStore {
       LIMIT ${limit};
     `;
 
-		const startTime = Date.now();
+		// const startTime = Date.now();
 		try {
 			const result = await this.client.query(query, [formattedQueryEmbedding]);
-			const elapsedTime = (Date.now() - startTime) / 1000;
+			// const elapsedTime = (Date.now() - startTime) / 1000;
 			// console.log(`Vector search completed in ${elapsedTime.toFixed(3)} seconds`);
 			return result.rows.map((row) => ({
 				id: row.id,
@@ -268,6 +269,13 @@ class VectorStore {
 	async disconnect(): Promise<void> {
 		await this.client.end();
 		console.log("Disconnected from database");
+	}
+
+	// Fast. Just a heuristic. Not exact.
+	roughTokenCount(text: string) {
+		const words = text.trim().split(/\s+/).length;
+		// Assume about 1.3 tokens per word (based on OpenAI averages)
+		return Math.ceil(words * 1.3);
 	}
 }
 

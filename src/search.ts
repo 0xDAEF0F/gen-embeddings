@@ -14,10 +14,6 @@ const main = async () => {
 
 	const searchResults = await vectorStore.search(searchText, 3);
 	const results_ = searchResults.map((res) => {
-		// return {
-		// 	metadata: res.metadata,
-		// 	content: res.content,
-		// };
 		return res.content;
 	});
 	console.log(JSON.stringify(results_, null, 2));
