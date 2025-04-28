@@ -12,7 +12,12 @@ const main = async () => {
 	const vectorStore = getVectorStore();
 	await vectorStore.connect();
 
-	const searchResults = await vectorStore.search(searchText, 3);
+	const searchResults = await vectorStore.search(
+		searchText,
+		100000,
+		undefined,
+		1000,
+	);
 	const results_ = searchResults.map((res) => {
 		return res.content;
 	});

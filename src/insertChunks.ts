@@ -20,10 +20,8 @@ const main = async () => {
 
 	const codeChunks = getChunkedCode(codebasePath);
 
-	const codeChunksTemp = codeChunks.slice(0, 10);
-
 	const embeddings = await Promise.all(
-		codeChunksTemp.map(async (chunk) => {
+		codeChunks.map(async (chunk) => {
 			try {
 				const embedding = await createOpenAiEmbedding(
 					chunk.content,

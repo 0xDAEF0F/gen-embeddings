@@ -161,7 +161,6 @@ class VectorStore {
 			"text-embedding-3-small",
 		);
 
-		// Format the embedding for pgvector
 		const formattedQueryEmbedding = `[${queryEmbedding.join(",")}]`;
 
 		let whereClause = "";
@@ -186,33 +185,74 @@ class VectorStore {
 			whereClause = `WHERE ${conditions.join(" OR ")}`;
 		}
 
-		const query = `
-      SELECT id, path, start_line, end_line, metadata, content, embedding <-> $1::vector as distance
-      FROM ${this.settings.vectorStore.tableName}
-      ${whereClause}
-      ORDER BY embedding <-> $1::vector
-      LIMIT ${limit};
-    `;
+		// Implement token-aware retrieval
+		const batchSize = Math.min(limit, 10); // Start with a reasonable batch size
+		let offset = 0;
+		let currentTokenCount = 0;
+		const resultChunks: CodeChunk[] = [];
 
-		// const startTime = Date.now();
-		try {
-			const result = await this.client.query(query, [formattedQueryEmbedding]);
-			// const elapsedTime = (Date.now() - startTime) / 1000;
-			// console.log(`Vector search completed in ${elapsedTime.toFixed(3)} seconds`);
-			return result.rows.map((row) => ({
-				id: row.id,
-				path: row.path,
-				startLine: row.start_line,
-				endLine: row.end_line,
-				metadata: row.metadata,
-				content: row.content,
-				embedding: row.embedding,
-				distance: row.distance,
-			}));
-		} catch (error) {
-			console.error("Error during vector search:", error);
-			return [];
+		while (currentTokenCount < maxTokens) {
+			const query = `
+        SELECT id, path, start_line, end_line, metadata, content, embedding <-> $1::vector as distance
+        FROM ${this.settings.vectorStore.tableName}
+        ${whereClause}
+        ORDER BY embedding <-> $1::vector
+        LIMIT ${batchSize} OFFSET ${offset};
+      `;
+
+			try {
+				const result = await this.client.query(query, [
+					formattedQueryEmbedding,
+				]);
+
+				if (result.rows.length === 0) {
+					break;
+				}
+
+				for (const row of result.rows) {
+					const chunk = {
+						id: row.id,
+						path: row.path,
+						startLine: row.start_line,
+						endLine: row.end_line,
+						metadata: row.metadata,
+						content: row.content,
+						embedding: row.embedding,
+						distance: row.distance,
+					};
+
+					// Calculate tokens for this chunk and add to total
+					const chunkTokens = this.roughTokenCount(row.content);
+
+					console.log(`Chunk tokens: ${chunkTokens}`);
+
+					// Add to results if we haven't exceeded maxTokens
+					resultChunks.push(chunk);
+					currentTokenCount += chunkTokens;
+
+					if (currentTokenCount >= maxTokens) {
+						break;
+					}
+				}
+
+				offset += batchSize;
+
+				if (result.rows.length < batchSize || resultChunks.length >= limit) {
+					console.log({
+						resultRowLength: result.rows.length,
+						resultChunksLength: resultChunks.length,
+						batchSize,
+						maxTokens,
+					});
+					break;
+				}
+			} catch (error) {
+				console.error("Error during vector search:", error);
+				break;
+			}
 		}
+
+		return resultChunks;
 	}
 
 	async delete(
@@ -273,9 +313,8 @@ class VectorStore {
 
 	// Fast. Just a heuristic. Not exact.
 	roughTokenCount(text: string) {
-		const words = text.trim().split(/\s+/).length;
-		// Assume about 1.3 tokens per word (based on OpenAI averages)
-		return Math.ceil(words * 1.3);
+		const chars = text.length;
+		return Math.ceil(chars / 4);
 	}
 }
 
