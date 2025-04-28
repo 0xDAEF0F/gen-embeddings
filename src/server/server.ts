@@ -1,7 +1,6 @@
 import "dotenv/config";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
-import fastifySwagger from "@fastify/swagger";
 import fastify from "fastify";
 import { aiSearchRoute } from "./routes/aiSearchRoute";
 import { dbSearchRoute } from "./routes/dbSearchRoute";
@@ -23,24 +22,6 @@ export const server = fastify({
 
 server.register(cors);
 server.register(multipart);
-server.register(fastifySwagger, {
-	swagger: {
-		info: {
-			title: "LLM Typescript Codebase Embeddings AI Search API",
-			description: "API documentation for AI search",
-			version: "1.0.0",
-		},
-		host: `${HOST}:${PORT}`,
-		schemes: ["http"],
-		consumes: ["application/json"],
-		produces: ["application/json"],
-		externalDocs: {
-			url: "https://github.com/paulb896/llm-typescript-codebase-embeddings",
-			description:
-				"Parse and Load Typescript Codebase into Postges Vector DB which can be used as part of a RAG setup.",
-		},
-	},
-});
 
 server.register(dbSearchRoute);
 // server.register(aiSearchRoute);
