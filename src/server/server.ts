@@ -2,7 +2,6 @@ import "dotenv/config";
 import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
-import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastify from "fastify";
 import { aiSearchRoute } from "./routes/aiSearchRoute";
 import { dbSearchRoute } from "./routes/dbSearchRoute";
@@ -43,11 +42,8 @@ server.register(fastifySwagger, {
 	},
 });
 
-server.register(aiSearchRoute);
 server.register(dbSearchRoute);
-server.register(getFilesRoute);
-server.register(getFileRoute);
-server.register(deleteFileRoute);
-server.register(fastifySwaggerUi, {
-	routePrefix: "/docs",
-});
+// server.register(aiSearchRoute);
+// server.register(getFilesRoute);
+// server.register(getFileRoute);
+// server.register(deleteFileRoute);
