@@ -18,4 +18,6 @@ RUN npm ci --only=production
 
 COPY --from=development /app/dist ./dist
 
+COPY .env .env
+
 CMD ["npm", "start"]

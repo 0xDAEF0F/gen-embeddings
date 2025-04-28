@@ -1,14 +1,14 @@
 import "dotenv/config";
-import fastify from "fastify";
 import cors from "@fastify/cors";
+import multipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import multipart from "@fastify/multipart";
+import fastify from "fastify";
 import { aiSearchRoute } from "./routes/aiSearchRoute";
 import { dbSearchRoute } from "./routes/dbSearchRoute";
+import { deleteFileRoute } from "./routes/deleteFileRoute";
 import { getFileRoute } from "./routes/getFileRoute";
 import { getFilesRoute } from "./routes/getFilesRoute";
-import { deleteFileRoute } from "./routes/deleteFileRoute";
 
 const PORT = Number.parseInt(process.env.WEBSERVER_PORT || "", 10) || 3000;
 const HOST = process.env.WEBSERVER_HOST || "0.0.0.0";
