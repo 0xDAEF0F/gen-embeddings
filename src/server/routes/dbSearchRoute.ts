@@ -18,7 +18,7 @@ export const dbSearchRoute = async (server: FastifyInstance) => {
 		const initializedVectorStore = await getInitializedVectorStore();
 		const results = await initializedVectorStore.search(
 			searchText,
-			10,
+			10000,
 			undefined,
 			Number(maxTokens),
 		);
