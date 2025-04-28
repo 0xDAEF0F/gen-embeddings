@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import { createEmbedding } from "./createEmbedding";
+import { createOpenAiEmbedding } from "./createEmbedding";
 
 interface CodeChunk {
 	id: string;
@@ -155,7 +155,10 @@ class VectorStore {
 		limit = 5,
 		metadataFilter: MetadataFilter | MetadataFilter[] | null = null,
 	): Promise<CodeChunk[]> {
-		const queryEmbedding = await createEmbedding(queryText);
+		const queryEmbedding = await createOpenAiEmbedding(
+			queryText,
+			"text-embedding-3-small",
+		);
 
 		// Format the embedding for pgvector
 		const formattedQueryEmbedding = `[${queryEmbedding.join(",")}]`;

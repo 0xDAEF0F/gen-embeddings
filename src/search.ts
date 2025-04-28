@@ -12,12 +12,13 @@ const main = async () => {
 	const vectorStore = getVectorStore();
 	await vectorStore.connect();
 
-	const searchResults = await vectorStore.search(searchText, 50);
+	const searchResults = await vectorStore.search(searchText, 3);
 	const results_ = searchResults.map((res) => {
-		return {
-			metadata: res.metadata,
-			content: res.content,
-		};
+		// return {
+		// 	metadata: res.metadata,
+		// 	content: res.content,
+		// };
+		return res.content;
 	});
 	console.log(JSON.stringify(results_, null, 2));
 
