@@ -12,12 +12,12 @@ const PORT = Number.parseInt(process.env.WEBSERVER_PORT || "", 10) || 3000;
 const HOST = process.env.WEBSERVER_HOST || "0.0.0.0";
 
 export const server = fastify({
-	logger: true,
-	ajv: {
-		customOptions: {
-			allErrors: true,
-		},
-	},
+  logger: true,
+  ajv: {
+    customOptions: {
+      allErrors: true,
+    },
+  },
 });
 
 server.register(cors);

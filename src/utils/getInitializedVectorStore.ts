@@ -4,13 +4,13 @@ import type { VectorStore } from "./vectorstore";
 let vectorStore: VectorStore;
 
 export const getInitializedVectorStore = async () => {
-	if (vectorStore) {
-		return vectorStore;
-	}
+  if (vectorStore) {
+    return vectorStore;
+  }
 
-	vectorStore = getVectorStore();
+  vectorStore = getVectorStore();
 
-	await vectorStore.connect();
+  await vectorStore.connect();
 
-	return vectorStore;
+  return vectorStore;
 };

@@ -10,7 +10,7 @@ import { processSourceFile } from "./getChunkedCode";
  * @internal
  */
 function sumExampleInternal(a: number, b: number) {
-	return a + b;
+  return a + b;
 }
 
 /**
@@ -20,36 +20,36 @@ function sumExampleInternal(a: number, b: number) {
  * @returns The sum of the two numbers
  */
 function sumExamplePublic(a: number, b: number) {
-	return a + b;
+  return a + b;
 }
 
 describe("jsDocs", () => {
-	const project = new Project({
-		tsConfigFilePath: `${process.cwd()}/tsconfig.json`,
-	});
-	const files = project.getSourceFiles();
+  const project = new Project({
+    tsConfigFilePath: `${process.cwd()}/tsconfig.json`,
+  });
+  const files = project.getSourceFiles();
 
-	const thisFile = files.find((file) =>
-		file.getFilePath().includes("jsdocs.test.ts"),
-	);
+  const thisFile = files.find((file) =>
+    file.getFilePath().includes("jsdocs.test.ts"),
+  );
 
-	if (!thisFile) {
-		throw new Error("This file not found");
-	}
+  if (!thisFile) {
+    throw new Error("This file not found");
+  }
 
-	test("sumExample internal jsDocs", () => {
-		const codeChunks = processSourceFile(thisFile);
+  test("sumExample internal jsDocs", () => {
+    const codeChunks = processSourceFile(thisFile);
 
-		const hasPublicChunk = codeChunks.some(
-			(chunk) => chunk.metadata.functionOrClassName === "sumExamplePublic",
-		);
+    const hasPublicChunk = codeChunks.some(
+      (chunk) => chunk.metadata.functionOrClassName === "sumExamplePublic",
+    );
 
-		expect(hasPublicChunk).toBe(true);
+    expect(hasPublicChunk).toBe(true);
 
-		for (const chunk of codeChunks) {
-			if (chunk.metadata.functionOrClassName === "sumExampleInternal") {
-				throw new Error("Chunk should not be created");
-			}
-		}
-	});
+    for (const chunk of codeChunks) {
+      if (chunk.metadata.functionOrClassName === "sumExampleInternal") {
+        throw new Error("Chunk should not be created");
+      }
+    }
+  });
 });
